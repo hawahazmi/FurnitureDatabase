@@ -1,0 +1,903 @@
+drop table company; 
+
+drop table address; 
+
+drop table warehouse; 
+
+drop table branch; 
+
+drop table department; 
+
+drop table employee; 
+
+drop table rawMaterial; 
+
+drop table product; 
+
+drop table collection; 
+
+drop table category; 
+
+drop table gallery; 
+
+drop table customer; 
+
+drop table design; 
+
+drop table payment; 
+
+drop table orderTracking; 
+
+drop table purchaseHistory; 
+
+drop table consultation; 
+
+drop table visit; 
+
+drop table position; 
+
+drop table employeeName; 
+
+drop table customerName; 
+
+drop table color; 
+
+drop table productColor; 
+
+drop table branchCategory; 
+
+drop table display; 
+
+  
+
+create table address ( 
+
+    addID varchar2(8) primary key, 
+
+    zipCode number(10), 
+
+    houseNo number(10), 
+
+    streetName varchar2(50), 
+
+    city varchar2(50), 
+
+    states varchar2(50), 
+
+    country varchar2(50) 
+
+); 
+
+  
+
+create table company (  
+
+    cID varchar2(8) primary key,  
+
+    cName varchar2(30),  
+
+    cContactNum varchar2(15),  
+
+    foundingDate date, 
+
+    addID varchar2(8), 
+
+    foreign key(addID) references address(addID) 
+
+); 
+
+  
+
+create table warehouse ( 
+
+    wID varchar2(8) primary key, 
+
+    wName varchar2(30), 
+
+    wContactNum varchar2(15), 
+
+    addID varchar2(8), 
+
+    capacity varchar2(50), 
+
+    cID varchar2(8), 
+
+    foreign key(addID) references address(addID), 
+
+    foreign key(cID) references company(cID) 
+
+); 
+
+  
+
+create table branch ( 
+
+    bID varchar2(8) primary key, 
+
+    bName varchar2(30), 
+
+    bContactNum varchar2(15), 
+
+    addID varchar2(8), 
+
+    operatingHours varchar2(30), 
+
+    cID varchar2(8), 
+
+    bStatus varchar2(30), 
+
+    foreign key(addID) references address(addID), 
+
+    foreign key(cID) references company(cID) 
+
+); 
+
+  
+
+create table department ( 
+
+    deptID varchar2(8) primary key, 
+
+    deptName varchar2(30), 
+
+    cID varchar2(8), 
+
+    foreign key(cID) references company(cID) 
+
+); 
+
+  
+
+create table gallery( 
+
+    galID varchar2(8) primary key, 
+
+    galName varchar2(60),  
+
+    galLocation varchar2(60),  
+
+    bID varchar2(8), 
+
+    foreign key(bID) references branch(bID) 
+
+); 
+
+ 
+
+create table position( 
+
+    posID varchar2(8) primary key, 
+
+    posTitle varchar2(60), 
+
+    salary number(10,2) 
+
+); 
+
+  
+
+create table employeeName( 
+
+    empNameID varchar2(8) primary key,  
+
+    empFName varchar2(50),  
+
+    empMName varchar2(50),  
+
+    empLName varchar2(50) 
+
+); 
+
+  
+
+  
+
+create table employee ( 
+
+    empID varchar2(8) primary key, 
+
+    empNameID varchar2(8), 
+
+    addID varchar2(8), 
+
+    deptID varchar2(8), 
+
+    bID varchar2(8), 
+
+    wID varchar2(8), 
+
+    posID varchar2(8), 
+
+    empDOB date, 
+
+    gender char(1), 
+
+    foreign key(addID) references address(addID), 
+
+    foreign key(deptID) references department(deptID), 
+
+    foreign key(bID) references branch(bID), 
+
+    foreign key(wID) references warehouse(wID), 
+
+    foreign key(empNameID) references employeeName(empNameID), 
+
+    foreign key(posID) references position(posID) 
+
+); 
+
+  
+
+create table customerName( 
+
+    custNameID varchar2(8) primary key,  
+
+    custFName varchar2(30),  
+
+    custMName varchar2(30),  
+
+    custLName varchar2(30) 
+
+); 
+
+  
+
+create table customer ( 
+
+    custID varchar2(8) primary key, 
+
+    custNameID varchar2(8), 
+
+    bID varchar2(8), 
+
+    addID varchar2(8), 
+
+    custContactNum varchar2(15), 
+
+    custEmail varchar2(60), 
+
+    foreign key (custNameID) references customerName(custNameID), 
+
+    foreign key (bID) references branch(bID), 
+
+    foreign key (addID) references address(addID) 
+
+); 
+
+  
+
+create table consultation ( 
+
+    conID varchar2(8) primary key, 
+
+    conDate date, 
+    
+    conTime varchar2(30), 
+
+    conType varchar2(30), 
+
+    custID varchar2(8), 
+
+    empID varchar2(8), 
+
+    foreign key (custID) references customer(custID), 
+
+    foreign key (empID) references employee(empID) 
+
+); 
+
+  
+
+create table visit ( 
+
+    vID varchar2(8) primary key, 
+
+    vDate date, 
+
+    vPropertyType varchar2(60), 
+
+    custID varchar2(8), 
+
+    empID varchar2(8), 
+
+    foreign key (custID) references customer(custID), 
+
+    foreign key (empID) references employee(empID) 
+
+); 
+
+  
+
+create table payment ( 
+
+    payID varchar2(8) primary key, 
+
+    payDate date, 
+
+    payAmount number(10,2), 
+
+    payMethod varchar2(60), 
+
+    custID varchar2(8), 
+
+    foreign key (custID) references customer(custID) 
+
+); 
+
+  
+
+create table orderTracking ( 
+
+    orderID varchar2(8) primary key, 
+
+    orderDate date, 
+
+    orderStatus varchar2(60), 
+
+    orderArrivalDate date, 
+
+    bID varchar2(8), 
+
+    custID varchar2(8), 
+
+    addID varchar2(8), 
+
+    foreign key (bID) references branch(bID), 
+
+    foreign key (custID) references customer(custID), 
+
+    foreign key (addID) references address(addID) 
+
+); 
+
+  
+
+  
+
+create table rawMaterial ( 
+
+    rmID varchar2(8) primary key, 
+
+    rmName varchar2(60), 
+
+    wID varchar2(8), 
+
+    supplier varchar2(60), 
+
+    cost number(10,2), 
+
+    quantity number(10), 
+
+    foreign key(wID) references warehouse(wID) 
+
+); 
+
+  
+
+create table category( 
+
+    catID varchar2(8) primary key, 
+
+    catName varchar2(60),  
+
+    catDescription varchar2(200) 
+
+);  
+
+  
+
+create table branchCategory( 
+
+    braCatID varchar2(8) primary key,  
+
+    bID varchar2(8),  
+
+    catID varchar2(8), 
+
+    foreign key(bID) references branch(bID), 
+
+    foreign key(catID) references category(catID) 
+
+); 
+
+  
+
+  
+
+create table collection( 
+
+    collID varchar2(8) primary key, 
+
+    collName varchar2(60),  
+
+    collStyle varchar2(60),  
+
+    collDateIntroduced date,  
+
+    gallID varchar2(8), 
+
+    foreign key(gallID) references gallery(galID) 
+
+); 
+
+  
+
+create table display( 
+
+    disID varchar2(8) primary key, 
+
+    bID varchar2(8), 
+
+    collID varchar2(8), 
+
+    foreign key(bID) references branch(bID), 
+
+    foreign key(collID) references collection(collID) 
+
+); 
+
+  
+
+  
+
+create table design ( 
+
+    desID varchar2(8) primary key, 
+
+    desStatus varchar2(60), 
+
+    custID varchar2(8), 
+
+    empID varchar2(8), 
+
+    foreign key (custID) references customer(custID), 
+
+    foreign key (empID) references employee(empID) 
+
+); 
+
+  
+
+create table product ( 
+
+    proID varchar2(8) primary key, 
+
+    proName varchar2(60), 
+
+    proPrice number(10,2), 
+
+    proDimension varchar2(50), 
+
+    empID varchar2(8), 
+
+    catID varchar2(8), 
+
+    wID varchar2(8), 
+
+    collID varchar2(8), 
+
+    desID varchar2(8), 
+
+    foreign key(empID) references employee(empID), 
+
+    foreign key(catID) references category(catID), 
+
+    foreign key(wID) references warehouse(wID), 
+
+    foreign key(collID) references collection(collID), 
+
+    foreign key(desID) references design(desID) 
+
+); 
+
+  
+
+create table purchaseHistory( 
+
+    purID varchar2(8) primary key, 
+
+    purDate date, 
+
+    purAmount number(10,2), 
+
+    bID varchar2(8), 
+
+    custID varchar2(8), 
+
+    desID varchar2(8), 
+
+    foreign key (bID) references branch(bID), 
+
+    foreign key (custID) references customer(custID), 
+
+    foreign key (desID) references design(desID) 
+
+); 
+
+  
+
+  
+
+create table color( 
+
+    colorID varchar2(7) primary key,  
+
+    colorName varchar2(20) 
+
+); 
+
+  
+
+create table productColor( 
+
+    colProID varchar2(8) primary key,  
+
+    proID varchar2(8),  
+
+    colorID varchar2(7), 
+
+    foreign key(colorID) references color(colorID) 
+
+); 
+
+  
+
+insert into address values ('A0000001', 32610, 201, 'Jalan Indah', 'Seri Iskandar', 'Perak', 'Malaysia'); 
+
+insert into address values ('A0000002', 16100, 330, 'Jalan Aman', 'Seri Iskandar', 'Perak', 'Malaysia'); 
+
+insert into address values ('A0000003', 54321, 100, 'Jalan Sentosa', 'Kota Bharu', 'Kelantan', 'Malaysia'); 
+
+insert into address values ('A0000004', 32100, 12, 'Jalan Tun Abdul Razak', 'Batu Berendam', 'Melaka', 'Malaysia'); 
+
+insert into address values ('A0000005', 37891, 345, 'Jalan Telipot', 'Bayan Lepas', 'Pulau Pinang', 'Malaysia'); 
+
+insert into address values ('A0000006', 32611, 600, 'Jalan Hang Jebat', 'Cheras', 'Kuala Lumpur', 'Malaysia'); 
+
+insert into address values ('A0000007', 54621, 710, 'Jalan Mekar', 'Seri Iskandar', 'Perak', 'Malaysia'); 
+
+insert into address values ('A0000008', 47892, 20, 'Jalan Seri', 'Kota Bharu', 'Kelantan', 'Malaysia'); 
+
+insert into address values ('A0000009', 33541, 130, 'Jalan Meri', 'Batu Berendam', 'Melaka', 'Malaysia'); 
+
+insert into address values ('A0000010', 16130, 200, 'Jalan Village', 'Bayan Lepas', 'Pulau Pinang', 'Malaysia'); 
+
+insert into address values ('A0000011', 32470, 10, 'Jalan Kampong', 'Cheras', 'Kuala Lumpur', 'Malaysia'); 
+
+insert into address values ('A0000012', 32265, 20, 'Jalan Bandar Iskandar', 'Batu Gajah', 'Perak', 'Malaysia'); 
+
+insert into address values ('A0000013', 35321, 30, 'Jalan Laut', 'Pengkalan Chepa', 'Kelantan', 'Malaysia'); 
+
+insert into address values ('A0000014', 39401, 19, 'Jalan Pak Cik', 'Ayer Hitam', 'Melaka', 'Malaysia'); 
+
+insert into address values ('A0000015', 32610, 911, 'Jalan Harmoni', 'Bayan Lepas', 'Pulau Pinang', 'Malaysia'); 
+
+insert into address values ('A0000016', 32660, 352, 'Jalan Haida',  'Putrajaya', 'Kuala Lumpur', 'Malaysia'); 
+
+insert into address values ('A0000017', 34510, 54, 'Jalan Iskandar', 'Seri Iskandar', 'Perak', 'Malaysia'); 
+
+insert into address values ('A0000018', 36758, 65, 'Jalan Orang Baru', 'Kota Bharu', 'Kelantan', 'Malaysia'); 
+
+insert into address values ('A0000019', 32324, 1001, 'Jalan Pondok', 'Batu Berendam', 'Melaka', 'Malaysia'); 
+
+insert into address values ('A0000020', 16101, 324, 'Jalan Hang Tuah', 'Bayan Lepas', 'Pulau Pinang', 'Malaysia'); 
+
+insert into address values ('A0000021', 16101, 324, 'Jalan Hang Punya', 'Cheras', 'Kuala Lumpur', 'Malaysia'); 
+
+select * from address; 
+
+  
+
+insert into company values ('CP000001', 'ICHIA sdn bhd', '0124801421', '01-Jan-2022', 'A0000001'); 
+
+select * from company; 
+
+ 
+
+insert into warehouse values ('W0000001', 'ICHIA Warehouse Seri Iskandar', '0124801241', 'A0000002', '250.00 ft', 'CP000001'); 
+
+insert into warehouse values ('W0000002', 'ICHIA Warehouse Kota Bharu', '0124801242', 'A0000003', '280.00 ft', 'CP000001'); 
+
+insert into warehouse values ('W0000003', 'ICHIA Warehouse Batu Berendam', '0124988241', 'A0000004', '250.00 ft', 'CP000001'); 
+
+insert into warehouse values ('W0000004', 'ICHIA Warehouse Bayan Lepas', '0134801241', 'A0000005', '260.00 ft', 'CP000001'); 
+
+insert into warehouse values ('W0000005', 'ICHIA Warehouse Cheras', '0124701241', 'A0000006', '300.00 ft', 'CP000001'); 
+
+select * from warehouse; 
+
+
+insert into branch values ('B0000001', 'ICHIA Seri Iskandar', '095461901', 'A0000007', '09:00:00 – 22:00:00', 'CP000001', 'Active'); 
+
+insert into branch values ('B0000002', 'ICHIA Kota Bharu', '095533401', 'A0000008', '10:00:00 – 22:00:00', 'CP000001', 'Active'); 
+
+insert into branch values ('B0000003', 'ICHIA Batu Berendam', '095661701', 'A0000009', '09:00:00 – 22:00:00', 'CP000001', 'Active'); 
+
+insert into branch values ('B0000004', 'ICHIA Bayan Lepas', '095462277', 'A0000010', '09:00:00 – 22:00:00', 'CP000001', 'Active'); 
+
+insert into branch values ('B0000005', 'ICHIA Cheras', '095461901', 'A0000011', '10:00:00 – 22:00:00', 'CP000001', 'Active'); 
+
+select * from branch; 
+
+
+insert into department values ('DM000001', 'Human Resource', 'CP000001'); 
+
+insert into department values ('DM000002', 'Research and Development', 'CP000001'); 
+
+insert into department values ('DM000003', 'Finance', 'CP000001'); 
+
+insert into department values ('DM000004', 'Marketing', 'CP000001'); 
+
+insert into department values ('DM000005', 'Sales', 'CP000001'); 
+
+select * from department; 
+
+
+insert into position values ('POS00001', 'CEO', 85000.00); 
+
+insert into position values ('POS00002', 'Senior Manager', 15000.00); 
+
+insert into position values ('POS00003', 'Manager', 12000.00); 
+
+insert into position values ('POS00004', 'Senior Executive',10000.00); 
+
+insert into position values ('POS00005', 'Executive',7000.00); 
+
+select * from position; 
+
+
+insert into employeeName values ('EN000001', 'Haida Fadhilah', 'Binti', 'Suhaili Kamal'); 
+
+insert into employeeName values ('EN000002', 'Amalin Hawa', 'Binti', 'Hazmi'); 
+
+insert into employeeName values ('EN000003', 'Tengku Aidatul', 'Binti', 'Tengku Khalid'); 
+
+insert into employeeName values ('EN000004', 'Aidil Fahmi', 'Bin', 'Mohd Jalal'); 
+
+insert into employeeName values ('EN000005', 'Mohamad Ali', 'Bin', 'Abdul Kashif'); 
+
+select * from employeeName; 
+
+
+insert into employee values ('E0000001', 'EN000001', 'A0000012', 'DM000005', 'B0000001', 'W0000001', 'POS00002', '05-Nov-1999', 'F'); 
+
+insert into employee values ('E0000002', 'EN000002', 'A0000013', 'DM000005', 'B0000002', 'W0000002', 'POS00003', '05-Jan-1999', 'M'); 
+
+insert into employee values ('E0000003', 'EN000003', 'A0000014', 'DM000005', 'B0000003', 'W0000003', 'POS00004', '14-Nov-1990', 'M'); 
+
+insert into employee values ('E0000004', 'EN000004', 'A0000015', 'DM000005', 'B0000004', 'W0000004', 'POS00004', '03-Jul-1988', 'F'); 
+
+insert into employee values ('E0000005', 'EN000005', 'A0000016', 'DM000005', 'B0000005', 'W0000005', 'POS00005', '20-Oct-1990', 'F'); 
+
+select * from employee; 
+
+
+insert into customerName values ('CN000001', 'Taylor', 'Alison', 'Swift'); 
+
+insert into customerName values ('CN000002', 'Nurul Huda', 'Binti', 'Hamid'); 
+
+insert into customerName values ('CN000003', 'Aaron Aziz', 'Bin', 'Mohamad'); 
+
+insert into customerName values ('CN000004', 'Nur Aainaa', 'Binti', 'Baharuddin'); 
+
+insert into customerName values ('CN000005', 'Muhammad Nazihan', 'Bin', 'Mohd Zain'); 
+
+select * from customerName; 
+
+
+insert into customer values ('C0000001', 'CN000001', 'B0000001', 'A0000017', '0124801421', 'taylor32@gmail.com'); 
+
+insert into customer values ('C0000002', 'CN000002', 'B0000005', 'A0000018', '0123457685', 'hudadada@gmail.com'); 
+
+insert into customer values ('C0000003', 'CN000003', 'B0000003', 'A0000019', '0147829384', 'aar0nbukanaziz@gmail.com'); 
+
+insert into customer values ('C0000004', 'CN000004', 'B0000004', 'A0000020', '0167853426', 'ainaaaaaa@gmail.com'); 
+
+insert into customer values ('C0000005', 'CN000005', 'B0000003', 'A0000021', '0197463542', 'nazih4n@gmail.com'); 
+
+select * from customer; 
+
+
+insert into rawMaterial values ('RM000001', 'Oak Wood', 'W0000001', 'Wood Work Supplier', 1560.70, 300); 
+
+insert into rawMaterial values ('RM000002', 'Plywood', 'W0000002', 'Woody Supplier', 1230.50, 300); 
+
+insert into rawMaterial values ('RM000003', 'Teak Wood', 'W0000003', 'Wood Material Supplier', 2860.00, 500); 
+
+insert into rawMaterial values ('RM000004', 'Steel Screw', 'W0000004', 'Steel Supplier', 2080.50, 1500); 
+
+insert into rawMaterial values ('RM000005', 'Connector Bolts', 'W0000005', 'Bolt Supplier', 1070.30, 2000); 
+
+select * from rawMaterial; 
+
+
+insert into gallery values ('G0000001', 'ICHIA Gallery Seri Iskandar', 'Seri Iskandar', 'B0000001'); 
+
+insert into gallery values ('G0000002', 'ICHIA Gallery Kota Bharu', 'Kota Bharu', 'B0000002'); 
+
+insert into gallery values ('G0000003', 'ICHIA Gallery Batu Berendam', 'Batu Berend', 'B0000003'); 
+
+insert into gallery values ('G0000004', 'ICHIA Gallery Bayan Lepas', 'Bayan Lepas', 'B0000004'); 
+
+insert into gallery values ('G0000005', 'ICHIA Gallery Cheras', 'Cheras', 'B0000005'); 
+
+select * from gallery; 
+
+
+insert into collection values ('CL000001', 'Hari Raya', 'Traditional', '24-Aug-23', 'G0000001'); 
+
+insert into collection values ('CL000002', 'Christmas', 'Festive', '10-Dec-23', 'G0000002'); 
+
+insert into collection values ('CL000003', 'Chinese New Year', 'Red', '10-Jan-23', 'G0000003'); 
+
+insert into collection values ('CL000004', 'Minimaliste', 'Minimalist', '02-Sep-23', 'G0000004'); 
+
+insert into collection values ('CL000005', 'Essence of Raya', 'Art Nouveau', '10-Jul-22', 'G0000005'); 
+
+select * from collection; 
+
+
+insert into design values ('D0000001', 'Completed','C0000001', 'E0000001'); 
+
+insert into design values ('D0000002', 'Completed','C0000002', 'E0000002'); 
+
+insert into design values ('D0000003', 'In Process','C0000003', 'E0000003'); 
+
+insert into design values ('D0000004', 'Completed','C0000004', 'E0000004'); 
+
+insert into design values ('D0000005', 'In Process','C0000005', 'E0000005'); 
+
+select * from design;
+
+
+insert into category values ('CT000001', 'Dining Room', 'Amazing design to increase your appetite!'); 
+
+insert into category values ('CT000002', 'Master Bedroom', 'Sophisticated design for ultimate relaxation and rejuvenation.'); 
+
+insert into category values ('CT000003', 'Living room', 'Elegant, inviting living room design that exudes comfort and style.'); 
+
+insert into category values ('CT000004', 'Kitchen', 'Sleek, modern kitchen design for the ultimate culinary experience.'); 
+
+insert into category values ('CT000005', 'Bedroom', 'Cozy, serene bedroom design for a blissful sleep.'); 
+
+select * from category; 
+
+
+insert into branchCategory values ('BT000001', 'B0000001', 'CT000001'); 
+
+insert into branchCategory values ('BT000002', 'B0000002', 'CT000002'); 
+
+insert into branchCategory values ('BT000003', 'B0000003', 'CT000003'); 
+
+insert into branchCategory values ('BT000004', 'B0000004', 'CT000004'); 
+
+insert into branchCategory values ('BT000005', 'B0000005', 'CT000005'); 
+
+select * from branchCategory; 
+
+
+
+insert into product values ('PD000001', 'Customed Brown Wardrobe', 750.00, '950mm x 500mm x 1100mm', 'E0000001', 'CT000005', 'W0000001', 'CL000001', 'D0000001'); 
+
+insert into product values ('PD000002', 'Customed Brown Sofa', 550.00, '3500mm x 2550mm x 600mm', 'E0000002', 'CT000003', 'W0000002', 'CL000002', 'D0000002'); 
+
+insert into product values ('PD000003', 'Customed White Bed', 1050.00, '2500mm x 1500mm x 500mm', 'E0000003', 'CT000002', 'W0000003', 'CL000003', 'D0000003'); 
+
+insert into product values ('PD000004', 'Customed Black Lamp', 550.00, '100mm x 800mm x 2500mm', 'E0000004', 'CT000003', 'W0000004', 'CL000004', 'D0000004'); 
+
+insert into product values ('PD000005', 'Customed White Wardrobe', 250.00, '920mm x 500mm x 1500mm', 'E0000005', 'CT000005', 'W0000005', 'CL000005', 'D0000005'); 
+
+select * from product; 
+
+
+insert into consultation values ('CO000001', '15-Aug-23', '17:30:00', 'Design Presentation', 'C0000001', 'E0000001'); 
+
+insert into consultation values ('CO000002', '20-Aug-23', '17:00:00', 'Design Drafting', 'C0000002', 'E0000002'); 
+
+insert into consultation values ('CO000003', '24-Aug-23', '12:30:00', 'Design Presentation', 'C0000003', 'E0000003'); 
+
+insert into consultation values ('CO000004', '29-Aug-23', '14:30:00', 'Interior Building', 'C0000004', 'E0000004'); 
+
+insert into consultation values ('CO000005', '05-Sep-23', '10:30:00', 'Design Presentation', 'C0000005', 'E0000005'); 
+
+select * from consultation; 
+
+  
+
+insert into visit values ('V0000001', '04-Aug-23', 'Bungalow', 'C0000001', 'E0000001'); 
+
+insert into visit values ('V0000002', '15-Aug-23', 'Apartment', 'C0000002', 'E0000002'); 
+
+insert into visit values ('V0000003', '20-Aug-23', 'Condominium', 'C0000003', 'E0000003'); 
+
+insert into visit values ('V0000004', '25-Aug-23', 'Terrace', 'C0000004', 'E0000004'); 
+
+insert into visit values ('V0000005', '30-Aug-23', 'Bungalow', 'C0000005', 'E0000005'); 
+
+select * from visit; 
+
+  
+
+insert into payment values ('P0000001', '05-Sep-23', 102345.76, 'Cash', 'C0000001'); 
+
+insert into payment values ('P0000002', '07-Sep-23', 25435.56, 'Credit Card', 'C0000002'); 
+
+insert into payment values ('P0000003', '08-Sep-23', 10504.60, 'E-Wallet', 'C0000003'); 
+
+insert into payment values ('P0000004', '08-Sep-23', 245.89, 'Cash', 'C0000004'); 
+
+insert into payment values ('P0000005', '14-Sep-23', 2290.55, 'Debit Card', 'C0000005'); 
+
+select * from payment; 
+
+  
+
+insert into orderTracking values ('OT000001', '05-Sep-23', 'Delivered', '30-Sep-23', 'B0000001', 'C0000001', 'A0000017'); 
+
+insert into orderTracking values ('OT000002', '07-Sep-23', 'Out for Deliver', '5-Oct-23', 'B0000002', 'C0000002', 'A0000018'); 
+
+insert into orderTracking values ('OT000003', '08-Sep-23', 'In Process', '15-Sep-23', 'B0000003', 'C0000003',  'A0000019'); 
+
+insert into orderTracking values ('OT000004', '10-Sep-23', 'In Process', '15-Sep-23', 'B0000004', 'C0000004',  'A0000020'); 
+
+insert into orderTracking values ('OT000005', '14-Sep-23', 'In Process', '30-Oct-23', 'B0000005', 'C0000005', 'A0000021'); 
+
+select * from orderTracking;  
+
+  
+
+insert into purchaseHistory values ('PH000001', '05-Sep-23', 102345.76, 'B0000001', 'C0000001', 'D0000001'); 
+
+insert into purchaseHistory values ('PH000002', '07-Sep-23', 25435.56, 'B0000002', 'C0000002', 'D0000002'); 
+
+insert into purchaseHistory values ('PH000003', '08-Sep-23', 10504.60, 'B0000003', 'C0000003', 'D0000003'); 
+
+insert into purchaseHistory values ('PH000004', '08-Sep-23', 245.89, 'B0000004', 'C0000004', 'D0000004'); 
+
+insert into purchaseHistory values ('PH000005', '14-Sep-23', 2290.55, 'B0000005', 'C0000005', 'D0000005'); 
+
+select * from purchaseHistory; 
+
+ 
+
+insert into color values ('#000000', 'Black'); 
+
+insert into color values ('#FF0000', 'Red'); 
+
+insert into color values ('#F5F5DC', 'Beige'); 
+
+insert into color values ('#008000', 'Green'); 
+
+insert into color values ('#FFFFFF', 'White'); 
+
+select * from color; 
+
+ 
+
+insert into productColor values ('PC000001', 'PD000001', '#FFFFFF'); 
+
+insert into productColor values ('PC000002', 'PD000002', '#008000'); 
+
+insert into productColor values ('PC000003', 'PD000003', '#F5F5DC'); 
+
+insert into productColor values ('PC000004', 'PD000004', '#FF0000'); 
+
+insert into productColor values ('PC000005', 'PD000005', '#000000'); 
+
+select * from productColor; 
+
+ 
+
+insert into display values ('DIS00001', 'B0000001', 'CL000001'); 
+
+insert into display values ('DIS00002', 'B0000002', 'CL000002'); 
+
+insert into display values ('DIS00003', 'B0000003', 'CL000003'); 
+
+insert into display values ('DIS00004', 'B0000004', 'CL000004'); 
+
+insert into display values ('DIS00005', 'B0000005', 'CL000005'); 
+
+select * from display; 
+
+ 
