@@ -1,0 +1,164 @@
+# FIRST QUERY: projection on single column
+
+# display all warehouse names
+SELECT wname
+FROM warehouse;
+
+
+
+# SECOND QUERY: selection using logical operator
+
+# filter the products that has price higher than 1000
+SELECT proID, proName, proPrice
+FROM product
+WHERE proPrice > 1000;
+
+# filter products with category ID 'CT000003'
+SELECT *
+FROM product
+WHERE catID = 'CT000003';
+
+
+
+# THIRD QUERY: inner join
+
+# Filter out customers who has a purchase history
+SELECT c.custID, purAmount, purDate
+FROM customer c
+INNER JOIN purchaseHistory ph
+ON c.custID = ph.custID;
+
+
+
+# FOURTH QUERY: functions
+
+# get data of number of employees and total salary of employees in branch 'B000000002'
+SELECT bID, COUNT(empID) AS empCount, SUM(salary) AS salarySum
+FROM employee e, position p
+WHERE e.posID = p.posID
+GROUP BY bID
+HAVING bID IN ('B0000002')
+ORDER BY bID;
+
+# get minimum salary of position
+SELECT MIN(salary)
+FROM position;
+
+# get data of total number of managers and sum of their salaries
+SELECT COUNT(e.empID) AS totalManager, SUM(p.salary) AS salarySum
+from position p, employee e
+WHERE p.posID = e.posID
+AND postitle = 'Manager';
+
+
+
+# FIFTH QUERY: select distinct
+
+# display cities and states the customer live in without any duplicates
+SELECT distinct city AS custCity, states AS custState
+FROM address a
+INNER JOIN customer c
+ON a.addID = c.addID;
+
+# SIXTH QUERY: group by
+
+# get number of employee in a department
+SELECT deptName, COUNT(e.empID) AS numEmployee
+FROM employee e
+LEFT JOIN department d
+ON e.deptID = d.deptID
+GROUP BY deptName;
+
+
+
+# SEVENTH QUERY: in clause
+
+# display customers who paid by cash or card
+SELECT custNameID
+FROM customer
+WHERE custID IN
+ (SELECT custID
+ FROM payment
+ WHEREE payMethod
+ IN ('Credit Card', 'Cash'));
+
+
+
+# EIGTH QUERY: order by
+
+# Display collection name by alphabetical order
+SELECT collID, collName
+FROM collection
+ORDER BY collName asc;
+
+
+
+# NINTH QUERY: pattern matching
+
+# display all employees name that start with 'A'
+SELECT e.empID, empFName
+FROM employee e, employeeName n
+WHERE e.empNameID = n.empNameID AND n.empFName LIKE 'A%';
+
+
+
+# TENTH QUERY: having
+
+# display number of employees for specific branches
+SELECT bID, COUNT(empID) AS myCount
+FROM employee
+GROUP BY bID
+HAVING bID IN ('B0000002', 'B0000003')
+ORDER BY bID;
+
+
+
+# ELEVENTH QUERY: fetch
+
+# display three highest purchase amount
+SELECT *
+FROM purchaseHistory
+ORDER BY purAmount DESC
+FETCH first 3 rows only;
+
+
+
+# TWELVETH QUERY: full join
+
+# join 2 tables together
+SELECT *
+FROM employee e
+FULL OUTER JOIN address a
+ON e.addID = a.addID;
+
+
+
+# THIRTEENTH QUERY: union
+
+# get products with price less than 600 and more than 3000
+SELECT proName, proPrice
+FROM product 
+WHERE proPrice > 3000
+UNION
+SELECT proName, proPrice
+FROM product 
+WHERE proPrice < 600;
+
+
+
+# UPDATE
+
+UPDATE gallery
+SET galLocation = 'Batu Berendam'
+WHERE galID = 'G0000003';
+
+UPDATE position
+SET salary = 50000
+WHERE posID = 'POS00001';
+
+
+
+# DELETE
+
+DELETE FROM department
+WHERE deptName = 'Intern'
